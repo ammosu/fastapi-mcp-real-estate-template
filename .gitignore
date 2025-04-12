@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
+
+# Database files
+*.sqlite3
+*.db
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Docker
+*.pid
+
+# Test/temporary data
+db_test/*.sqlite
+db_test/*.db
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
