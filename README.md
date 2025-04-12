@@ -24,6 +24,26 @@ db_test/init.sql             # 資料表與測試資料
    ```
 3. 確認 PostgreSQL 已啟動，並已依 `db_test/init.sql` 建立資料表與測試資料（建議用 docker-compose 啟動）
 
+---
+
+## Docker 部署
+
+本專案已提供 Dockerfile 與 docker-compose.yml，可一鍵啟動 FastAPI 與 PostgreSQL。
+
+1. 複製 .env 範例（可直接用下方內容）：
+   ```
+   DATABASE_URL=postgresql://postgres:postgres@db:5432/realestate
+   ```
+2. 於專案根目錄執行以下指令自動 build 並啟動所有服務：
+   ```
+   docker-compose up --build
+   ```
+3. 預設 FastAPI 服務會在 [http://localhost:8000](http://localhost:8000) 提供 API，PostgreSQL 服務在 5432 port。
+4. 資料庫會自動執行 `db_test/init.sql` 初始化資料表與測試資料。
+5. 若原本有 `db_test/docker-compose.yml`，已可刪除，請僅使用根目錄的 `docker-compose.yml`。
+
+---
+
 ## 啟動 API 服務
 
 於專案根目錄執行：
