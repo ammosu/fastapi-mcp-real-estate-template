@@ -9,6 +9,9 @@ router = APIRouter(
     tags=["properties"]
 )
 
+from fastapi.responses import JSONResponse
+from datetime import datetime
+
 def get_db():
     db = database.SessionLocal()
     try:
@@ -19,7 +22,7 @@ def get_db():
 @router.get("/", response_model=List[schemas.RealEstateData])
 def read_properties(
     city: Optional[str] = Query("新北市", example="新北市", description="城市"),
-    district: Optional[str] = Query("板橋區", example="板橋區", description="區域"),
+    district: Optional[str] = Query(None, example="板橋區", description="區域"),
     building_type: Optional[str] = Query(None, example="大樓", description="建物型態"),
     transaction_type: Optional[str] = Query(None, example="買賣", description="交易型態"),
     main_use: Optional[str] = Query(None, example="住家用", description="主用途"),
@@ -36,7 +39,12 @@ def read_properties(
     max_building_age: Optional[float] = Query(None, example=30, description="最大屋齡"),
     min_transaction_date: Optional[str] = Query(None, example="2023-01-01", description="最早交易日期"),
     max_transaction_date: Optional[str] = Query(None, example="2024-12-31", description="最晚交易日期"),
-    address_keyword: Optional[str] = Query(None, example="中山路", description="地址關鍵字"),
+    address_keyword: Optional[str] = Query(
+        None,
+        alias="address_contains",
+        example="中山路",
+        description="地址關鍵字（可用 address_contains 傳遞）"
+    ),
     page: int = Query(1, ge=1, example=1, description="頁碼"),
     page_size: int = Query(20, ge=1, le=100, example=20, description="每頁筆數"),
     db: Session = Depends(get_db)
@@ -84,6 +92,11 @@ def read_properties(
     offset = (page - 1) * page_size
     results = query.offset(offset).limit(page_size).all()
     return results
+
+@router.get("/now")
+def get_now():
+    """取得現在時間（ISO 格式）"""
+    return JSONResponse(content={"now": datetime.now().isoformat()})
 
 @router.get("/{transaction_id}", response_model=schemas.RealEstateData)
 def read_property(transaction_id: UUID, db: Session = Depends(get_db)):
